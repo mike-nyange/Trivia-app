@@ -66,11 +66,259 @@ Errors that will be returned include the following;
 
 ## Endpoints
 
-##  GET "/categories"
+###  GET "/categories"
 
 - Fetches all categories available in the database.
 - Request Parameters: None
-- Returns an object that contains key value pairs of the categories
+- Returns categories as a dictionary and success value
 - Sample: curl `http://127.0.0.1:5000/categories` 
 
+```json
+{
+  "categories": {
+    "1" : "Countries",
+    "2" : "Continents",
+    "3" : "General History",
+    "4" : "Pop Culture",
+    "5" : "Presidents",
+    "6" : "Sports"
+    },
+  "success": true
+}
+```
 
+### POST/categories
+
+- This creates a new category using the submitted type.
+- Returns the created category, success value and total categories
+- Sample `curl http://127.0.0.1:5000/categories -X POST -H "Content-Type: application/json" -d '{"type":"new Category"}'`
+
+```json
+{
+  "created": 7,
+  "success": true,
+  "total_categories": 7
+}
+```
+
+### DELETE "categories/{category_id}
+
+- This deletes a category provided that its id exists.
+- Returns the id of the deleted category, success value and total categories.
+- Sample `curl -X DELETE http://127.0.0.1:5000/categories/8`
+
+```json
+{
+  "deleted": 7,
+  "success": true,
+  "total_categories": 6
+}
+```
+
+### Get "questions"
+
+- Returns a list of questions for the given phone number as they have been paginated in groups of 10.
+- Sample `curl http://127.0.0.1:5000/questions?page=1`
+
+```json
+  "categories": {
+    "1" : "Capital cities",
+    "2" : "Continents",
+    "3" : "General History",
+    "4" : "Pop Culture",
+    "5" : "Presidents",
+    "6" : "Sports"
+    },
+  "questions": [
+    {
+      "answer": "Dodoma",
+      "category": 1,
+      "difficulty": 1,
+      "id": 1,
+      "question": "The capital city of Tanzania"
+    },
+    {
+      "answer": "South America",
+      "category": 2,
+      "difficulty": 2,
+      "id": 2,
+      "question": "In which continent are the Andes Mountains located"
+    },
+    {
+      "answer": "Asia",
+      "category": 2,
+      "difficulty": 3,
+      "id": 3,
+      "question": "Which continent has the largest population"
+    },
+    {
+      "answer": "Uhuru Kenyatta",
+      "category": 5,
+      "difficulty": 4,
+      "id": 4,
+      "question": "Who is the president of Kenya"
+    },
+    
+  ],
+  "success": true,
+  "total_questions": 4
+```
+
+### POST "/questions"
+
+- Creates a new question.
+- Returns the id of the created question, success value total questions and question list based on current page.
+- Sample: `curl http://127.0.0.1:5000/questions?page=1 -X POST -H "Content-Type: application/json" -d '{"question":"When did Hitler die", "answer":"1945", "category":"3" , "difficulty":"3"}'`
+
+```json
+  "created": 5,
+  "questions": [
+    {
+      "answer": "Dodoma",
+      "category": 1,
+      "difficulty": 1,
+      "id": 1,
+      "question": "The capital city of Tanzania"
+    },
+    {
+      "answer": "South America",
+      "category": 2,
+      "difficulty": 2,
+      "id": 2,
+      "question": "In which continent are the Andes Mountains located"
+    },
+    {
+      "answer": "Asia",
+      "category": 2,
+      "difficulty": 3,
+      "id": 3,
+      "question": "Which continent has the largest population"
+    },
+    {
+      "answer": "Uhuru Kenyatta",
+      "category": 5,
+      "difficulty": 4,
+      "id": 4,
+      "question": "Who is the president of Kenya"
+    },
+    {
+      "answer": "1945",
+      "category": 3,
+      "difficulty": 3,
+      "id": 5,
+      "question": "When did Hitler die"
+    },
+  ],
+  "success": true,
+  "total_questions": 5
+```
+
+### POST "/questions"
+
+- Search for questions using a search term.
+- Return questions paginated with the matching search term.
+- Sample: `curl http://127.0.0.1:5000/questions -X POST -H "Content-Type: application/json" -d '{"searchTerm": "continents"}'`
+
+```json
+{
+  "questions": [
+    {
+      "answer": "South America",
+      "category": 2,
+      "difficulty": 2,
+      "id": 2,
+      "question": "In which continent are the Andes Mountains located"
+    },
+    {
+      "answer": "Asia",
+      "category": 2,
+      "difficulty": 3,
+      "id": 3,
+      "question": "Which continent has the largest population"
+    },
+  ],
+  "success": true,
+  "total_questions": 2
+}
+```
+
+### DELETE "questions/{category_id}
+
+- This deletes a question provided that its id exists.
+- Returns the id of the deleted question, success value and total questions.
+- Sample `curl -X DELETE http://127.0.0.1:5000/question/5`
+
+```json
+{
+  "deleted": 5,
+  "success": true,
+  "total_categories": 4
+}
+```
+
+### GET "/categories/<{category_id}/questions"
+
+- get all questions associated to a particular category.
+- Returns the currently category, a list of paginated questions, success
+- Sample: `curl http://127.0.0.1:5000/categories/6/questions`
+
+```json
+{
+  "current_category": 2,
+  "questions": [
+    {
+      "answer": "South America",
+      "category": 2,
+      "difficulty": 2,
+      "id": 2,
+      "question": "In which continent are the Andes Mountains located"
+    },
+    {
+      "answer": "Asia",
+      "category": 2,
+      "difficulty": 3,
+      "id": 3,
+      "question": "Which continent has the largest population"
+    },
+  ],
+  "success": true,
+  "total_questions": 2
+}
+```
+
+### POST/quizzes
+
+- Takes a list of previous questions and category of choice and allows a user to play the trivia game.
+- Returns a random questions belonging to the provided category and which is not in the previous questions list and a success value.
+- Sample: `curl http://127.0.0.1:5000/quizzes -X POST -H "Content-Type: application/json" -d '{"previous_questions": [2], "quiz_category": {"type": "continents", "id": "3"}}'`
+
+```json
+
+{
+  "question":
+   {
+      "answer": "Asia",
+      "category": 2,
+      "difficulty": 3,
+      "id": 3,
+      "question": "Which continent has the largest population"
+    },
+  "success": true
+}
+
+```
+
+## Author
+
+### Mike Mwanyika Nyange
+
+## Testing
+
+### To run tests, run
+
+`
+dropdb trivia_test
+createdb trivia_test
+psql trivia_test < trivia.psql
+python test_flaskr.py
+`
