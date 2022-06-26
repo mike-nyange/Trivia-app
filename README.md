@@ -47,3 +47,30 @@ Pay special attention to what data the frontend is expecting from each API respo
 By making notes ahead of time, you will practice the core skill of being able to read and understand code and will have a simple plan to follow to build out the endpoints of your backend API.
 
 > View the [Frontend README](./frontend/README.md) for more details.
+
+## API Reference
+
+### Getting Started
+
+Base Url: This application is currently hosted on a local machine. It is hosted at [http://127.0.0.1:5000/]
+Authentication: It doesn't supprt authentication hence requires no authentication or  API keys.
+
+## Error Handling
+
+Errors that will be returned include the following;
+
+- 400: Bad Request.
+- 404: Resource not found.
+- 422: Unprocessable Entity.
+- 500: Internal Server Error.
+
+## Endpoints
+
+##  GET "/categories"
+
+- Fetches all categories available in the database.
+- Request Parameters: None
+- Returns an object that contains key value pairs of the categories
+- Sample: curl `http://127.0.0.1:5000/categories` 
+
+
