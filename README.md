@@ -310,7 +310,8 @@ Errors that will be returned include the following;
 
 ## Author
 
-### Mike Mwanyika Nyange
+- Mike Mwanyika Nyange
+- Esther Wanjiru Kariuki
 
 ## Testing
 
