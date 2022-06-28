@@ -274,28 +274,36 @@ def create_app(test_config=None):
     @app.route('/quizzes', methods=['POST'])
     def play_quiz_game():
         if request.method == "POST":
-            try:
-                body = request.get_json()
-                previous_questions = body.get('previous_questions', None)
-                category = body.get('quiz_category', None)
+            data = dict(request.form or request.json or request.data)
+            category = data.get('quiz_category')
+            previous_questions = data.get('previous_questions', [])
 
-                category_id = category['id']
-                next_question = None
-                
-                if category_id != 0:
-                    questions = Question.query.filter_by(category=category_id).filter(Question.id.notin_((previous_questions))).all()    
+            if not data.get('quiz_category'):
+                return json.dumps({
+                    'success': False,
+                    'error': 'Missing params.'
+                }), 400
+            else:
+                if category['id'] == 0:
+                    selected_question = Question.query.filter(
+                        Question.id.notin_(previous_questions)
+                    ).limit(1).one_or_none()
                 else:
-                    questions = Question.query.filter(Question.id.notin_((previous_questions))).all()
-                
-                if len(questions) > 0:
-                    next_question = random.choice(questions).format()
-                
-                return jsonify({
-                    'question': next_question,
-                    'success': True,
-                })
-            except:
-                abort(422)
+                    selected_question = Question.query.filter_by(
+                        category=category['id']).filter(
+                        Question.id.notin_(previous_questions)
+                    ).limit(1).one_or_none()
+
+                if selected_question:
+                    return jsonify({
+                        'success': True,
+                        'question': selected_question.format()
+                    })
+                else:
+                    return json.dumps({
+                        'success': False,
+                        'error': 'Question not found.'
+                    }), 404
 
     """
     @TODO:
